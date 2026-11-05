@@ -6,11 +6,21 @@
 - PATCH：兼容bug修复、微调
 
 ## [Unreleased]
+
 ### Added
 
 ### Changed
 
+- 部署上线：Cloudflare Workers 静态资源（`web/wrangler.toml` 声明 `out/` 为 assets，
+  404 走自定义页，目录式路径自动映射 `index.html`）；站点地址写入 `SITE.url`，
+  canonical / robots / sitemap 一体生效
+
 ### Fixed
+
+- 构建命令内联 `cd web`：Workers 项目的「根目录」设置在实测中不生效，
+  `npm ci` 会跑到仓库根目录而找不到 `package-lock.json`
+- `SITE.url` 为空时 canonical、robots 的 Host、sitemap 全部回退到 localhost，
+  线上 1362 条 URL 指向错误域名
 
 ### Removed
 
