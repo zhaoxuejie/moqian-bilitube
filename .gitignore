@@ -1,0 +1,37 @@
+# 环境变量与密钥
+.env
+.env.local
+.env.*.local
+
+# 依赖
+node_modules/
+__pycache__/
+*.pyc
+venv/
+.venv/
+.pytest_cache/
+
+# 构建产物
+dist/
+build/
+*.egg-info/
+
+# 日志
+*.log
+logs/
+
+# 编辑器 / 系统
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# 临时文件
+*.bak
+
+# 本地数据与采集产物（仅忽略仓库根目录的 SQLite 与报告；
+# web/public/data 是 export 生成的站点快照，需要随仓库提交，否则新克隆无法构建站点）
+/data/
+# 真实配方不入库：关键词、词表、权重、prompt 都是调出来的，只留在本地/私有仓。
+# 公开仓库保留 presets/example 作为骨架。
+/presets/ai-video/

@@ -1,0 +1,2 @@
+# 配方里的 prompt.md 是喂给模型的提示词，不是文档，不参与 markdown 规范检查
+presets/**/prompt.md
