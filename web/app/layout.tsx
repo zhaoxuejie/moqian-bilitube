@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import Link from "next/link";
 import Logo from "@/components/Logo";
+import SocialLinks from "@/components/SocialLinks"
 import ThemeToggle from "@/components/ThemeToggle";
 import { loadMeta } from "@/lib/data";
 import { SITE, SITE_DESCRIPTION, SITE_ORIGIN, SITE_TITLE } from "@/lib/site";
@@ -146,6 +147,7 @@ function Footer() {
                 把 B 站 AI 区的候选视频按分区、时长分组做分位归一，
                 再由大模型读完弹幕与简介给出判断。
               </p>
+              <SocialLinks />
             </div>
 
             <div className="footer-cols">

@@ -1490,6 +1490,28 @@ a.btn:hover svg {
   margin-top: 18px;
 }
 
+.page-qr {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 26px;
+}
+
+.page-qr img {
+  width: 104px;
+  height: 104px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+
+.page-qr p {
+  max-width: 26em;
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.9;
+  color: var(--ink-3);
+}
+
 .page-meta {
   margin: 40px 0 0;
   font-size: 11.5px;
@@ -1497,6 +1519,68 @@ a.btn:hover svg {
 }
 
 /* 页脚 baseline 里的链接 */
+/* 页脚联系方式：GitHub / 博客 / 公众号 */
+.social {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.social-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0;
+  border: 0;
+  background: none;
+  font-size: 12.5px;
+  color: var(--ink-3);
+  cursor: pointer;
+  transition: color 0.18s ease;
+}
+
+.social-link:hover,
+.social-link:focus-visible {
+  color: var(--accent-ink);
+}
+
+.social-wechat {
+  position: relative;
+  display: inline-flex;
+}
+
+.social-qr {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 10px);
+  transform: translateX(-50%);
+  display: grid;
+  gap: 6px;
+  justify-items: center;
+  width: 154px;
+  padding: 10px 10px 8px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: 0 10px 28px color-mix(in srgb, var(--ink) 14%, transparent);
+  z-index: 30;
+}
+
+/* 显式给宽高：绝对定位 + img{max-width:100%} 会把图片压成最小内容宽度，
+   alt 文字竖排，看起来像一条竖线 */
+.social-qr img {
+  display: block;
+  width: 132px;
+  height: 132px;
+  border-radius: 4px;
+}
+
+.social-qr em {
+  font-style: normal;
+  font-size: 11.5px;
+  color: var(--ink-3);
+}
 .footer-base a,
 .footer-cols a {
   color: var(--accent-ink);

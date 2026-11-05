@@ -8,6 +8,12 @@
 export const SITE = {
   url: "https://www.51bilitube.com",
   repo: "https://github.com/zhaoxuejie/moqian-bilitube",
+  /** 个人博客；留空则不显示入口 */
+  blog: "https://www.51moqian.com",
+  /** 公众号二维码图片路径，例如 "/wechat.png"；留空则不显示入口 */
+  wechatQr: "/wechat.png",
+  /** 公众号名称，显示在二维码下方 */
+  wechatName: "",
   contact: "", // 可选：公开邮箱，例如 "hi@example.com"
   updatedAt: "2026.11.05",
 };

@@ -32,3 +32,12 @@
 2. 不跳过流程、简化文档、省略评测环节
 3. 开工前先查阅当前文档、tasks/readme.md 任务索引，识别可执行任务
 4. 只处理【前置依赖全部 done】的任务，不提前开发未来任务
+
+## 发版流程
+
+- 生产分支是 `release`，不是 `main`：推 `main` 只进仓库，不构建
+- 发版 = 打 `vX.Y.Z` tag 并推送，`.github/workflows/release.yml` 自动校验后推进
+  `release` 分支、触发 Cloudflare 构建、创建 GitHub Release
+- 改动前把 `CHANGELOG.md` 的 `[Unreleased]` 整理成新版本段落
+- 部署与排查细节见 `docs/deploy.md`
+- 数据更新用 `scripts/update.ps1`：`-Push` 只进仓库，`-Deploy` 才发版

@@ -96,6 +96,18 @@ export default function PrivacyPage() {
             回到精选
           </Link>
         </div>
+
+        {SITE.wechatQr ? (
+          <div className="page-qr">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={SITE.wechatQr} alt="微信公众号二维码" width={104} height={104} />
+            <p>
+              扫码关注公众号
+              {SITE.wechatName ? `「${SITE.wechatName}」` : ""}
+              ，新一期精选会先发在那里；也可以在公众号后台直接留言。
+            </p>
+          </div>
+        ) : null}
       </section>
 
       <p className="page-meta">最后更新：{SITE.updatedAt}</p>

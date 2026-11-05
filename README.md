@@ -1,43 +1,87 @@
-# moqian-bilitube
+<!-- markdownlint-disable MD041 -->
 
-B 站 AI 大模型视频的「值不值得看」决策层：从海量 AI 视频里筛出真正有价值的教程、实战与测评，给出结构化卡片与反算法排序。
+<div align="center">
 
-## 版本信息
+# BiliTube
 
-当前版本：v0.2.0（视觉重做、暗色模式、配方解耦、持续更新）
+**翻完 3,652 个 B 站 AI 视频，留下这 1,360 个。**
 
-## 概述
+少一点寻找，多一点收获。把时间留给值得看的 AI 视频。
 
-B 站首页的推荐按完播率与停留时长优化，容易奖励标题党与合集拼凑。本项目反过来：用三层评估（机器信号 → 文本理解 → 内容理解）判断一条视频"值不值得花两小时"，把结果压成卡片——讲了什么、适合谁、需要什么前置、是否过时——并按内容密度排序，而不是按播放量。
+[在线站点](https://www.51bilitube.com) · [问题反馈](https://github.com/zhaoxuejie/moqian-bilitube/issues) · [设计决策](docs/architecture.md)
 
-只覆盖 AI 大模型方向：教程课程、实战工程、工具测评。数据来自 B 站公开接口，站点纯静态，无账号、无后端。
+[![CI](https://github.com/zhaoxuejie/moqian-bilitube/actions/workflows/ci.yml/badge.svg)](https://github.com/zhaoxuejie/moqian-bilitube/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/zhaoxuejie/moqian-bilitube?color=2f7a55)](https://github.com/zhaoxuejie/moqian-bilitube/releases)
+[![License](https://img.shields.io/github/license/zhaoxuejie/moqian-bilitube?color=2f7a55)](LICENSE)
 
-当前产出：3652 个候选 → 1360 个通过过滤 → 全部完成弹幕采集与卡片生成。
+![BiliTube 首页](docs/assets/home-light.png)
 
-## 快速启动
+</div>
 
-> 前置依赖：Python 3.12、Node 20+
+---
 
-1. 安装依赖
+## 这是什么
+
+B 站的 AI 大模型视频多到看不完：同一个话题有几十个版本，播放量高的未必讲得清楚，
+讲得清楚的又常常没人看。
+
+BiliTube 做的是**先筛后排**：从 3,652 个候选里按相关性、时长、分区硬过滤，
+再按「分区 × 时长档」做分位归一打分，最后由大模型读完简介与弹幕逐条写判断，
+留下 1,360 个值得花时间的，做成一个能按主题、难度、时效筛选的静态站点。
+
+**它不推荐最火的，它推荐最值得看的。**
+
+## 效果
+
+| 指标 | 数值 |
+| ---- | ---- |
+| 进入筛选的候选 | 3,652 条 |
+| 最终精选 | 1,360 条 |
+| 覆盖主题 | 80 个 |
+| 读过的弹幕样本 | 209,549 条 |
+
+<details>
+<summary>深色模式</summary>
+
+![深色模式](docs/assets/home-dark.png)
+
+</details>
+
+## 快速开始
+
+三种人，三条路。
+
+### 只想看内容
+
+直接打开 [www.51bilitube.com](https://www.51bilitube.com)。
+
+### 想本地跑站点（用仓库里的数据快照）
+
+```bash
+git clone https://github.com/zhaoxuejie/moqian-bilitube.git
+cd moqian-bilitube
+
+npm --prefix web ci
+npm --prefix web run build        # 产物在 web/out
+python -m http.server 4173 --directory web/out
+```
+
+打开 <http://127.0.0.1:4173> 即可。数据快照（`web/public/data/*.json`）随仓库提供，不需要爬虫。
+
+### 想跑完整流水线（自己采集、打分、生成卡片）
 
 ```bash
 python -m venv .venv
-.venv\Scripts\activate        # Windows
+.venv\Scripts\activate            # macOS / Linux: source .venv/bin/activate
 pip install -r requirements.txt
-npm --prefix web install
+
+copy .env.example .env            # 填 LLM_API_KEY（生成卡片必填）
 ```
 
-1. 配置环境变量
+然后准备一份配方（见 [配方](#配方preset)），跑一次全流程：
 
 ```bash
-copy .env.example .env
-# 填入 LLM_API_KEY（必填）；BILI_SESSDATA 选填，仅字幕用
-```
-
-1. 跑流水线
-
-```bash
-python -m bilitube collect search --preset presets/ai-video --max-pages 10
+python -m bilitube collect search --preset presets/example --max-pages 3
 python -m bilitube collect enrich
 python -m bilitube filter
 python -m bilitube score
@@ -46,27 +90,66 @@ python -m bilitube card
 python -m bilitube export --out web/public/data
 ```
 
-1. 构建站点
+> 仓库里**没有**真实配方（关键词、词表、权重、提示词）和数据库，只有
+> `presets/example/` 示例和导出的数据快照。想复刻线上效果要自己调配方。
 
-```bash
-npm --prefix web run build      # 产物在 web/out/
-python -m http.server 4173 --directory web/out   # 本地预览 http://127.0.0.1:4173
+## 目录结构
+
+```text
+moqian-bilitube/
+├── bilitube/                  # Python 流水线（引擎）
+│   ├── http.py                # 限速 0.8rps、重试、风控识别
+│   ├── db.py                  # SQLite schema、幂等写入、断点续采
+│   ├── collector.py           # 搜索 / 详情补齐 / 弹幕采集
+│   ├── filter.py              # 词表 + 分区白名单 + 时长与配额
+│   ├── scoring.py             # 分位归一与机器分
+│   ├── llm.py                 # 卡片生成与内容分回写
+│   ├── preset.py              # 配方加载与校验
+│   ├── export.py              # 导出站点 JSON
+│   └── cli.py                 # 命令行入口
+├── presets/                   # 配方：关键词、规则、权重、提示词
+│   └── example/               # 最小可用示例
+├── web/                       # Next.js 静态站点
+│   ├── app/                   # 首页 / 详情页 / 隐私页 / 404
+│   ├── components/            # 卡片、筛选器、收藏、主题切换
+│   ├── lib/                   # 数据读取、类型、站点配置
+│   └── public/data/           # 导出的数据快照（随仓库提供）
+├── tests/                     # 单元测试，全部离线
+├── docs/                      # PRD、架构与 ADR、接口契约、任务卡
+├── scripts/                   # 周更与部署辅助脚本
+└── data/                      # 本地 SQLite 与报告（不入库）
 ```
 
+## 工作原理
+
+```text
+关键词矩阵 ──▶ 搜索采集 ──▶ 硬过滤 ──▶ 分位打分 ──▶ 弹幕采集 ──▶ 模型读内容 ──▶ 导出 JSON ──▶ 静态站
+  (20 个)        (3,652)      (1,360)     机器分         (1,360)      内容分 + 卡片      (1.4 MB)      (1,364 页)
+```
+
+分数由两部分相加：**互动信号**（收藏、投币、点赞、讨论、播放量，在同分区、同时长
+段内比较分位，避免不同区不可比）+ **内容判断**（模型读完标题、简介与弹幕样本后给出的
+0–100 质量分）。比例 6 : 4。
+
+排序不看播放量绝对值，只比同类视频里的相对表现——为什么这么设计、分组退化的规则，
+见 [docs/architecture.md](docs/architecture.md) 的 ADR-002/009。
+
 ## 命令行
+
+所有命令幂等、可断点续跑。
 
 | 命令 | 作用 |
 | ---- | ---- |
 | `collect search` | 按关键词分页采集候选视频 |
-| `collect enrich` | 补详情与 UP 粉丝数（按 mid 去重） |
-| `collect danmaku` | 抓通过视频的弹幕 |
-| `filter` | 规则化硬过滤（词表/分区/时长/UP 配额） |
-| `score` | 分区 × 时长档分位归一，产出机器分 |
-| `card` | LLM 生成卡片与内容分，重算综合分 |
+| `collect enrich` | 补齐详情、UP 主粉丝数 |
+| `collect danmaku` | 抓取通过视频的弹幕样本 |
+| `filter` | 相关性过滤与硬过滤 |
+| `score` | 分位归一与机器评分 |
+| `card` | LLM 生成卡片与内容分 |
 | `update` | 一条命令跑完增量：采集 → 补齐 → 过滤 → 评分 → 弹幕 → 卡片 → 导出 |
 | `export` | 导出站点 JSON |
 
-所有命令幂等、可断点续跑。
+全局参数：`--preset <目录>`（默认 `presets/ai-video`）、`--data-dir`、`--log-level`。
 
 ## 配方（preset）
 
@@ -81,131 +164,46 @@ presets/ai-video/
 └── prompt.md      生成卡片的 system prompt
 ```
 
-```bash
-python -m bilitube score --preset presets/ai-video
-python -m bilitube card  --preset presets/ai-video
-```
-
-不传 `--preset` 时默认用 `presets/ai-video`。换一个领域就是新写一个目录，
-不需要改 Python；`--keywords` / `--rules` 仍可用于临时覆盖。
+换成播客、论文、课程等其它领域：克隆 `presets/example/` 改四份文件即可，不用动 Python。
+详见 [presets/README.md](presets/README.md)。
 
 ## 持续更新
 
-每周一行命令跑完增量：
+`update` 是增量的：补齐只看未补的、弹幕只看没抓的、卡片只看缺卡片的，
+中途被风控打断也能重跑续上。
 
 ```bash
-python -m bilitube update --max-pages 3
-npm --prefix web run build
+python -m bilitube update --max-pages 3    # 每周一次，约 15 分钟
 ```
 
-`update` 会依次执行：按发布时间抓最近几页 → 补齐新视频详情 → 重跑规则 →
-重算分位 → 抓新视频弹幕 → 只为缺卡片的生成 → 导出 JSON。
-
-几个关键点：
-
-- **`--fresh` 默认开着**（加 `--resume` 可关掉）。`collect search` 的断点状态是永久的，
-  不加 `--fresh` 上周标记过的页会被永久跳过，抓不到新内容
-- **每一步都是增量的**：补齐只看 `enrich_status != done`，弹幕只看没有记录的，
-  卡片只看「没有卡片」或「模型变了」的
-- **评分是全量重算的**：分位是相对值，新视频进来后老视频的分数会小幅变化
-- 触发风控（412/429）会自动中止，已采部分已落库，稍后重跑即可续上
-- 每步的明细写到 `data/reports/update.json`
-
-### 建议的节奏
-
-| 频率 | 命令 | 耗时 / 成本 |
-| ---- | ---- | ---- |
-| 每周 | `update --max-pages 3` | 约 15 分钟、< ¥0.5 |
-| 每月 | `update --max-pages 10`（扫得更深） | 约 40 分钟、约 ¥1 |
-| 每季度 | 人工清理失效视频与主题词表 | 1 小时 |
-
-## 部署
-
-站点是纯静态产物（`web/out`），托管在 Cloudflare Pages（选型见 ADR-020）。
-
-| 配置项 | 值 |
-| ---- | ---- |
-| 根目录（Root directory） | 留空 |
-| 构建命令 | `cd web && npm ci && npm run build` |
-| 部署命令 | `cd web && npx wrangler deploy` |
-| 环境变量 | `NODE_VERSION=20` |
-
-> 把 `cd web` 写进命令，而不是依赖控制台的「根目录」设置：
-> 实测该设置在 Workers 项目里没有生效，`npm ci` 会跑到仓库根目录而找不到
-> `package-lock.json`（它在 `web/` 里）。
-
-排查「push 不触发构建」：Workers Builds 的 API 用 Worker 的 `script_tag`（不是名字）
-标识项目。先 `GET /accounts/{id}/builds/workers/{tag}`，确认
-`git_repository.repo_id` 指向的是本仓库——曾经踩过它指向另一个仓库、
-于是 push 永远不触发构建的坑。
-
-两种接入方式都支持：
-
-- **Pages 项目**：框架预设留空，输出目录填 `out`
-- **Workers 项目**（`wrangler deploy`）：已经提供 `web/wrangler.toml`，
-  声明 `out/` 为静态资源目录，404 走 `404.html`，目录式路径自动映射 `index.html`
-
-**正式域名：[https://www.51bilitube.com](https://www.51bilitube.com)**
-（Cloudflare 自定义域，apex 与 www 均已绑定；canonical 统一指向 www）
-
-换域名只改 `web/lib/site.ts` 里的 `SITE.url` 一行——canonical、robots 的 Host、
-sitemap 的 1362 条 URL 会一起切换。
-
-### 什么时候部署
-
-Cloudflare 的**生产分支是 `release`，不是 `main`**：
-
-| 动作 | 结果 |
-| ---- | ---- |
-| `git push origin main` | 只进仓库，**不构建**（日常开发、文档、数据提交都走这里） |
-| `git push origin main:release` | **触发构建并上线**（发版时执行一次） |
-
-也就是说部署是显式动作，不会因为改个文档就重新发布一整站。
-
-```bash
-# 发布 = 打 tag + 把 main 推到 release
-git tag -a v0.3.0 -m "v0.3.0"
-git push origin main --tags
-git push origin main:release
-```
-
-> Cloudflare Workers Builds 只认分支，不认 tag；用 `release` 分支来做"发版闸门"
-> 是官方能力范围内最干净的做法。`scripts/update.ps1 -Deploy` 会把上面两步一起做完。
-
-周更的三档用法：
-
-```bash
-powershell -File scripts/update.ps1              # 只更新本地数据
-powershell -File scripts/update.ps1 -Push        # 提交数据并推 main（不部署）
-powershell -File scripts/update.ps1 -Deploy      # 推 main 后同时推 release（部署上线）
-```
-
-### 备份
-
-数据库里最贵的是弹幕与卡片，重建要 1 小时加 1 美元：
+数据库里最贵的是弹幕与卡片（重建约 1 小时），定期备份：
 
 ```bash
 python -c "import sqlite3;c=sqlite3.connect('data/bilitube.db');c.execute(\"VACUUM INTO 'data/backup-2026-11-05.db'\")"
 ```
 
-`presets/ai-video/` 是真实配方，已被 `.gitignore` 排除（只留在本地）。
-新克隆的仓库用 `--preset presets/example`，或复制一份 example 后填自己的配方。
+> 部署与发版的运维细节（Cloudflare 配置、release 分支、tag 发版流程）见
+> [docs/deploy.md](docs/deploy.md)。
 
-## 目录概览
+## 技术栈
 
-```text
-moqian-bilitube/
-├── bilitube/            # Python 流水线（采集/过滤/评分/卡片/导出）
-├── presets/             # 配方：关键词、过滤规则、打分权重、生成提示词
-├── web/                 # Next.js 静态站点
-├── data/                # 本地 SQLite 与报告（gitignore）
-├── docs/                # PRD、架构、接口契约、任务卡、实测报告
-├── tests/               # 单元测试（全部离线）
-└── .github/workflows/   # CI：markdownlint、shellcheck、pytest
-```
+| 层 | 选型 |
+| ---- | ---- |
+| 采集与处理 | Python 3.11+、httpx、SQLite |
+| 内容理解 | 兼容 OpenAI 协议的大模型（默认 DeepSeek） |
+| 站点 | Next.js 15 App Router、React 19、`output: "export"` 纯静态导出 |
+| 样式 | 手写 CSS + 设计令牌，无 UI 框架 |
+| 部署 | Cloudflare Workers 静态资源 + 自定义域名 |
 
-## 规范
+## 参与
 
-- 贡献规范：见 `CONTRIBUTING.md`
-- AI 开发约束：见 `AGENTS.md`
-- 版本变更记录：见 `CHANGELOG.md`
+- 发现误判、失效链接，或者想补充主题：提 [issue](https://github.com/zhaoxuejie/moqian-bilitube/issues)
+- 贡献代码前请先看 [CONTRIBUTING.md](CONTRIBUTING.md) 与 [AGENTS.md](AGENTS.md)
+- 安全相关问题走 [SECURITY.md](SECURITY.md)，不要在公开 issue 里贴可利用细节
+
+如果你是 UP 主，不希望自己的视频被收录，提 issue 说明即可，会在下一次数据更新时移除。
+
+## 许可
+
+代码以 [MIT](LICENSE) 许可发布；数据与评分卡片的使用条款见 [NOTICE.md](NOTICE.md)。
+站内视频版权归各 UP 主与哔哩哔哩所有，本项目与哔哩哔哩官方无关。
