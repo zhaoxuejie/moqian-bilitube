@@ -125,10 +125,14 @@ npm --prefix web run build
 
 | 配置项 | 值 |
 | ---- | ---- |
-| Root directory | `web` |
-| Build command | `npm ci && npm run build` |
-| Output directory | `out` |
+| 根目录（Root directory） | 留空 |
+| 构建命令 | `cd web && npm ci && npm run build` |
+| 部署命令 | `cd web && npx wrangler deploy` |
 | 环境变量 | `NODE_VERSION=20` |
+
+> 把 `cd web` 写进命令，而不是依赖控制台的「根目录」设置：
+> 实测该设置在 Workers 项目里没有生效，`npm ci` 会跑到仓库根目录而找不到
+> `package-lock.json`（它在 `web/` 里）。
 
 两种接入方式都支持：
 
