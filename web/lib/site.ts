@@ -6,7 +6,7 @@
  * 留空时回退到 localhost，本地构建不会报错。
  */
 export const SITE = {
-  url: "https://moqian-bilitube.zxj198468.workers.dev",
+  url: "https://www.51bilitube.com",
   repo: "", // 例如 "https://github.com/yourname/bilitube"
   contact: "", // 可选：公开邮箱，例如 "hi@example.com"
   updatedAt: "2026.11.05",
