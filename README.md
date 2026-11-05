@@ -145,11 +145,14 @@ npm --prefix web run build
 - **Workers 项目**（`wrangler deploy`）：已经提供 `web/wrangler.toml`，
   声明 `out/` 为静态资源目录，404 走 `404.html`，目录式路径自动映射 `index.html`
 
-上线前把 `web/lib/site.ts` 里的 `SITE.url` 填成自定义域名，否则 canonical、sitemap、robots
-都会指向 localhost。
+**正式域名：[https://www.51bilitube.com](https://www.51bilitube.com)**
+（Cloudflare 自定义域，apex 与 www 均已绑定；canonical 统一指向 www）
+
+换域名只改 `web/lib/site.ts` 里的 `SITE.url` 一行——canonical、robots 的 Host、
+sitemap 的 1362 条 URL 会一起切换。
 
 周更一条命令：`powershell -File scripts/update.ps1 -Build -Push` —— 跑流水线、构建、
-提交数据快照并推送，Cloudflare Pages 收到 push 后自动重建。
+提交数据快照并推送，Cloudflare Workers Builds 收到 push 后自动重建（约 2 分钟）。
 
 ### 备份
 
