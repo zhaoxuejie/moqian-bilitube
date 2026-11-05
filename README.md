@@ -134,6 +134,11 @@ npm --prefix web run build
 > 实测该设置在 Workers 项目里没有生效，`npm ci` 会跑到仓库根目录而找不到
 > `package-lock.json`（它在 `web/` 里）。
 
+> 排查「push 不触发构建」：Workers Builds 的 API 用 Worker 的 `script_tag`（不是名字）
+> 标识项目。先 `GET /accounts/{id}/builds/workers/{tag}`，确认
+> `git_repository.repo_id` 指向的是本仓库——曾经踩过它指向另一个仓库、
+> 于是 push 永远不触发构建的坑。
+
 两种接入方式都支持：
 
 - **Pages 项目**：框架预设留空，输出目录填 `out`
