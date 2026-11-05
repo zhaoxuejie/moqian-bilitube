@@ -1,0 +1,18 @@
+# Cloudflare Pages 读取此文件（构建后位于 out/_headers）
+
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN
+  Referrer-Policy: strict-origin-when-cross-origin
+
+# 带 hash 的构建产物，可以永久缓存
+/_next/static/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# 数据快照：周更后 10 分钟内可能还是旧的，用 stale-while-revalidate 兜住
+/data/*
+  Cache-Control: public, max-age=600, stale-while-revalidate=86400
+
+# HTML 每次走协商缓存，保证内容更新能立刻拿到
+/*.html
+  Cache-Control: public, max-age=0, must-revalidate
