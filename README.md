@@ -130,6 +130,12 @@ npm --prefix web run build
 | Output directory | `out` |
 | 环境变量 | `NODE_VERSION=20` |
 
+两种接入方式都支持：
+
+- **Pages 项目**：框架预设留空，输出目录填 `out`
+- **Workers 项目**（`wrangler deploy`）：已经提供 `web/wrangler.toml`，
+  声明 `out/` 为静态资源目录，404 走 `404.html`，目录式路径自动映射 `index.html`
+
 上线前把 `web/lib/site.ts` 里的 `SITE.url` 填成自定义域名，否则 canonical、sitemap、robots
 都会指向 localhost。
 

@@ -1,0 +1,15 @@
+# Cloudflare Workers 静态资源部署配置
+# 构建命令 npm run build 会把站点输出到 ./out，这里声明把它作为静态资源发布。
+# 免费额度：静态资源请求不计费、不限量。
+
+name = "moqian-bilitube"
+compatibility_date = "2025-01-01"
+
+[assets]
+directory = "./out"
+
+# 找不到的路径返回 404.html（保持 404 状态码），而不是空白的默认页
+not_found_handling = "404-page"
+
+# 目录式路径（trailingSlash 生成的 /v/BVxxx/）自动映射到 index.html
+html_handling = "auto-trailing-slash"
