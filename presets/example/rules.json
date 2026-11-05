@@ -1,0 +1,8 @@
+{
+  "ai_terms": ["人工智能", "机器学习", "AI"],
+  "bait_terms": ["震惊", "必看", "全网首发"],
+  "collection_terms": ["合集", "全集"],
+  "allowed_tnames": ["计算机技术", "科学科普"],
+  "min_duration_seconds": 180,
+  "max_videos_per_up": 3
+}

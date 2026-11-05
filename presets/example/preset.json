@@ -1,0 +1,9 @@
+{
+  "name": "example",
+  "version": "v1",
+  "description": "最小示例配方：换成播客、论文、课程等其它领域时，从这里复制一份开始",
+  "keywords": "keywords.txt",
+  "rules": "rules.json",
+  "scoring": "scoring.json",
+  "prompt": "prompt.md"
+}

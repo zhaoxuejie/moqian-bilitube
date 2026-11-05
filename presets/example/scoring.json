@@ -1,0 +1,13 @@
+{
+  "weights": {
+    "fav_rate": 0.34,
+    "coin_rate": 0.33,
+    "like_rate": 0.33
+  },
+  "buckets": [
+    [0, 900, "<15min"],
+    [900, 3600, "15-60min"],
+    [3600, null, ">60min"]
+  ],
+  "min_group_size": 30
+}
