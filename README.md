@@ -151,6 +151,27 @@ npm --prefix web run build
 换域名只改 `web/lib/site.ts` 里的 `SITE.url` 一行——canonical、robots 的 Host、
 sitemap 的 1362 条 URL 会一起切换。
 
+### 什么时候部署
+
+Cloudflare 的**生产分支是 `release`，不是 `main`**：
+
+| 动作 | 结果 |
+| ---- | ---- |
+| `git push origin main` | 只进仓库，**不构建**（日常开发、文档、数据提交都走这里） |
+| `git push origin main:release` | **触发构建并上线**（发版时执行一次） |
+
+也就是说部署是显式动作，不会因为改个文档就重新发布一整站。
+
+```bash
+# 发布 = 打 tag + 把 main 推到 release
+git tag -a v0.3.0 -m "v0.3.0"
+git push origin main --tags
+git push origin main:release
+```
+
+> Cloudflare Workers Builds 只认分支，不认 tag；用 `release` 分支来做"发版闸门"
+> 是官方能力范围内最干净的做法。`scripts/update.ps1 -Deploy` 会把上面两步一起做完。
+
 周更一条命令：`powershell -File scripts/update.ps1 -Build -Push` —— 跑流水线、构建、
 提交数据快照并推送，Cloudflare Workers Builds 收到 push 后自动重建（约 2 分钟）。
 
