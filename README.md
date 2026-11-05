@@ -172,8 +172,13 @@ git push origin main:release
 > Cloudflare Workers Builds 只认分支，不认 tag；用 `release` 分支来做"发版闸门"
 > 是官方能力范围内最干净的做法。`scripts/update.ps1 -Deploy` 会把上面两步一起做完。
 
-周更一条命令：`powershell -File scripts/update.ps1 -Build -Push` —— 跑流水线、构建、
-提交数据快照并推送，Cloudflare Workers Builds 收到 push 后自动重建（约 2 分钟）。
+周更的三档用法：
+
+```bash
+powershell -File scripts/update.ps1              # 只更新本地数据
+powershell -File scripts/update.ps1 -Push        # 提交数据并推 main（不部署）
+powershell -File scripts/update.ps1 -Deploy      # 推 main 后同时推 release（部署上线）
+```
 
 ### 备份
 
