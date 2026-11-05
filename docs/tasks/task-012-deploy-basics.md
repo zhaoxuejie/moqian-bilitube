@@ -4,7 +4,7 @@
 - 里程碑：v0.3.0
 - 前置依赖：TASK-011（✅ done）
 - 优先级：🟠 P1
-- 状态：🟡 doing
+- 状态：✅ done
 - 关联文档：architecture.md ADR-020；prd.md 模块F
 
 ## 背景

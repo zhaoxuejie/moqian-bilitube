@@ -32,7 +32,7 @@
 | TASK-009 | LLM 内容理解与卡片生成 | v0.1.0 | TASK-008 | 🔴 P0 | ✅ done | prd.md 模块C/D；ADR-002、ADR-013 |
 | TASK-010 | 站点骨架与精选清单页 | v0.2.0 | TASK-009 | 🟠 P1 | ✅ done | prd.md 模块F；ADR-004 |
 | TASK-011 | 站点视觉重做：编辑型版式与封面 | v0.2.0 | TASK-010 | 🟠 P1 | ✅ done | ADR-015、ADR-016；api-contract.md 数据产物契约 |
-| TASK-012 | 部署基础设施：元信息、robots、sitemap、404 与缓存头 | v0.3.0 | TASK-011 | 🟠 P1 | 🧪 evaluating | ADR-020；prd.md 模块F |
+| TASK-012 | 部署基础设施：元信息、robots、sitemap、404 与缓存头 | v0.3.0 | TASK-011 | 🟠 P1 | ✅ done | ADR-020；prd.md 模块F |
 
 ## 规则
 
