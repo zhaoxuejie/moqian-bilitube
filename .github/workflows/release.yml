@@ -1,0 +1,87 @@
+name: release
+
+# 打版本 tag 才发版：
+#   1. 校验 tag 指向的提交在 main 上（防止在功能分支上打 tag 误部署）
+#   2. 校验线上版本能快进（防止给旧提交补 tag 把站点回退）
+#   3. 推进 release 分支 → Cloudflare Workers Builds 自动构建部署
+#   4. 创建 GitHub Release，说明由 GitHub 按提交自动生成
+#
+# 日常 push main 不会触发本工作流，也不会部署。
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检出 tag 对应的提交
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 校验 tag 命名（vX.Y.Z）
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          if ! [[ "$TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::error::tag 必须是 vX.Y.Z 形式，当前是 $TAG"
+            exit 1
+          fi
+          echo "✓ tag 命名合规"
+
+      - name: 拉取 main 与 release 的最新状态
+        run: |
+          git fetch origin main
+          git fetch origin release || true
+
+      - name: 闸门 1/2 —— tag 必须在 main 上
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          echo "tag         : $TAG"
+          echo "tag commit  : $(git rev-parse --short HEAD)"
+          echo "main commit : $(git rev-parse --short origin/main)"
+          if ! git merge-base --is-ancestor HEAD origin/main; then
+            echo "::error::tag $TAG 指向的提交不在 main 上（可能是在功能分支上打的），拒绝部署"
+            exit 1
+          fi
+          echo "✓ 该提交已合并进 main"
+
+      - name: 闸门 2/2 —— 不能回退线上版本
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          if git rev-parse --verify origin/release >/dev/null 2>&1; then
+            if ! git merge-base --is-ancestor origin/release HEAD; then
+              echo "::error::tag $TAG 比线上版本旧，部署会导致回退，拒绝执行"
+              exit 1
+            fi
+            echo "✓ 相对线上是快进"
+          else
+            echo "release 分支尚不存在，本次为首发"
+          fi
+
+      - name: 推进 release 分支（触发 Cloudflare 构建部署）
+        run: |
+          git push origin HEAD:release
+          echo "已推送，Cloudflare 构建约 2-3 分钟后生效"
+
+      - name: 创建 GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          gh release create "$TAG" \
+            --title "$TAG" \
+            --generate-notes \
+            --verify-tag

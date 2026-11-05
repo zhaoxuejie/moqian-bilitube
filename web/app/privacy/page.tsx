@@ -65,15 +65,27 @@ export default function PrivacyPage() {
         <h2>反馈与联系方式</h2>
         {/* 渠道在 web/lib/site.ts 里配置；两个都为空时只保留一句说明 */}
         <p>
-          发现误判、失效链接，或者想提建议，欢迎通过下面的渠道告诉我。
+          发现误判、失效链接、想补充某个主题，或者你是 UP 主希望自己的视频被移除，
+          都可以在 GitHub 上提 issue。这是本项目唯一的官方联系渠道。
           {SITE.repo || SITE.contact ? "" : "（渠道整理中，稍后补上。）"}
         </p>
         <div className="page-actions">
           {SITE.repo ? (
-            <a className="btn" href={SITE.repo} target="_blank" rel="noreferrer">
-              GitHub 仓库
-              <ArrowIcon size={11} />
-            </a>
+            <>
+              <a
+                className="btn"
+                href={`${SITE.repo}/issues/new`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                提交 Issue
+                <ArrowIcon size={11} />
+              </a>
+              <a className="btn" href={SITE.repo} target="_blank" rel="noreferrer">
+                GitHub 仓库
+                <ArrowIcon size={11} />
+              </a>
+            </>
           ) : null}
           {SITE.contact ? (
             <a className="btn" href={`mailto:${SITE.contact}`}>

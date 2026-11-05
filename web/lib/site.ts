@@ -7,7 +7,7 @@
  */
 export const SITE = {
   url: "https://www.51bilitube.com",
-  repo: "", // 例如 "https://github.com/yourname/bilitube"
+  repo: "https://github.com/zhaoxuejie/moqian-bilitube",
   contact: "", // 可选：公开邮箱，例如 "hi@example.com"
   updatedAt: "2026.11.05",
 };

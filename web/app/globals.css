@@ -1497,13 +1497,17 @@ a.btn:hover svg {
 }
 
 /* 页脚 baseline 里的链接 */
-.footer-base a {
-  color: var(--ink-3);
-  transition: color 0.18s ease;
+.footer-base a,
+.footer-cols a {
+  color: var(--accent-ink);
+  border-bottom: 1px solid color-mix(in srgb, var(--accent) 32%, transparent);
+  transition: color 0.18s ease, border-color 0.18s ease;
 }
 
-.footer-base a:hover {
-  color: var(--accent-ink);
+.footer-base a:hover,
+.footer-cols a:hover {
+  color: var(--ink);
+  border-color: var(--ink-4);
 }
 /* ── 响应式 ──────────────────────────────────────────────── */
 

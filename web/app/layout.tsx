@@ -3,7 +3,7 @@ import Link from "next/link";
 import Logo from "@/components/Logo";
 import ThemeToggle from "@/components/ThemeToggle";
 import { loadMeta } from "@/lib/data";
-import { SITE_DESCRIPTION, SITE_ORIGIN, SITE_TITLE } from "@/lib/site";
+import { SITE, SITE_DESCRIPTION, SITE_ORIGIN, SITE_TITLE } from "@/lib/site";
 import { formatNumber } from "@/lib/types";
 import "./globals.css";
 
@@ -167,6 +167,12 @@ function Footer() {
                 <p>数据来自 B 站公开接口</p>
                 <p>个人项目，与哔哩哔哩无关联</p>
                 <p>视频版权归 UP 主，本站不转存</p>
+                <p>
+                  建议与纠错：
+                  <a href={`${SITE.repo}/issues`} target="_blank" rel="noreferrer">
+                    GitHub Issues
+                  </a>
+                </p>
               </div>
             </div>
           </div>

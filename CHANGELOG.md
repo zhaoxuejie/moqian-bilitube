@@ -11,9 +11,31 @@
 
 ### Changed
 
-- 部署上线：Cloudflare Workers 静态资源（`web/wrangler.toml` 声明 `out/` 为 assets，
-  404 走自定义页，目录式路径自动映射 `index.html`）；站点地址写入 `SITE.url`，
-  canonical / robots / sitemap 一体生效
+### Fixed
+
+### Removed
+
+## [0.3.0] - 2026-11-05
+
+开源发布 + 正式上线：站点在 <https://www.51bilitube.com>，部署与发版全自动化。
+
+### Added
+
+- 开源仓库（MIT）：引擎、站点、文档进库，真实配方与数据库留在本地
+- 正式域名 `www.51bilitube.com`（apex 与 www 均绑定 Cloudflare 自定义域），
+  canonical / robots / sitemap 的 1362 条 URL 一体切换
+- 发版自动化 `.github/workflows/release.yml`：推 `vX.Y.Z` tag →
+  校验提交在 main 上、校验不回退 → 推进 `release` 分支 → Cloudflare 构建部署 →
+  创建 GitHub Release（说明自动生成）
+- 联系方式：隐私页与页脚指向 GitHub Issues
+- `NOTICE.md`、`SECURITY.md`：数据来源、下架渠道、限速要求、不要提交什么
+
+### Changed
+
+- 部署方式：Cloudflare Workers 静态资源（`web/wrangler.toml` 声明 `out/` 为 assets，
+  404 走自定义页，目录式路径自动映射 `index.html`）
+- 部署闸门：生产分支从 `main` 改为 `release`——推 `main` 不再构建，发版才部署
+- `scripts/update.ps1` 区分三档：`-Push` 只进仓库、`-Deploy` 发版、`-Build` 本地验证
 
 ### Fixed
 
@@ -21,8 +43,8 @@
   `npm ci` 会跑到仓库根目录而找不到 `package-lock.json`
 - `SITE.url` 为空时 canonical、robots 的 Host、sitemap 全部回退到 localhost，
   线上 1362 条 URL 指向错误域名
-
-### Removed
+- Workers Builds 的 Git 连接曾指向别的仓库（`repo_id` 1331580080），导致 push 永不触发构建
+- `scripts/update.ps1` 缺 UTF-8 BOM，PowerShell 5.1 按 ANSI 解析导致语法错误
 
 ## [0.2.0] - 2026-11-05
 
