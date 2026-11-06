@@ -14,6 +14,11 @@ export const SITE = {
   wechatQr: "/wechat.png",
   /** 公众号名称，显示在二维码下方 */
   wechatName: "",
+  /**
+   * Cloudflare Web Analytics 的 site token。
+   * 从控制台 Workers & Pages → Web Analytics 拿到后填这里；留空则不注入脚本。
+   */
+  analyticsToken: "e6470f6add484559be3dac95f7d3c6d4",
   contact: "", // 可选：公开邮箱，例如 "hi@example.com"
   updatedAt: "2026.11.05",
 };

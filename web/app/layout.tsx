@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import Link from "next/link";
+import Analytics from "@/components/Analytics"
 import Logo from "@/components/Logo";
 import SocialLinks from "@/components/SocialLinks"
 import ThemeToggle from "@/components/ThemeToggle";
@@ -202,6 +203,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Header />
         {children}
         <Footer />
+        <Analytics />
       </body>
     </html>
   );

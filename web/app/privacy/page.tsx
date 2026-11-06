@@ -24,8 +24,8 @@ const POINTS = [
     body: "详情页嵌入了 B 站官方播放器，封面图片直连 B 站图床（i0–i2.hdslb.com）。打开这些页面时，你的浏览器会向 bilibili.com 发起请求（包含 IP 地址、User-Agent），可能被 B 站记录，适用哔哩哔哩自己的隐私政策。",
   },
   {
-    title: "没有统计与广告",
-    body: "站内不加载任何第三方统计、广告或社交插件脚本。若未来启用访问统计，会在此写明统计方式与退出方法。",
+    title: "访问统计（无 cookie）",
+    body: "站内只用 Cloudflare Web Analytics 统计访问量：不种 cookie、不做跨站追踪、不建立访客画像，只记录「哪个页面被访问了几次」这类聚合数据，IP 不落库。除此之外没有任何广告或社交插件脚本。不想被统计时，用浏览器插件或系统 hosts 拦截 cloudflareinsights.com 即可，不影响站内功能。",
   },
   {
     title: "内容版权",

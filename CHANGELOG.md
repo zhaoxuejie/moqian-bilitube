@@ -15,6 +15,22 @@
 
 ### Removed
 
+## [0.5.0] - 2026-11-06
+
+访问统计上线。
+
+### Added
+
+- Cloudflare Web Analytics：无 cookie、不做跨站追踪，只上报页面浏览的聚合数据。
+  beacon 手动注入（`web/components/Analytics.tsx`），token 配在 `SITE.analyticsToken`，
+  留空则不注入任何脚本
+- `docs/deploy.md` 增加「访问统计」一节：开启步骤、token 填哪、改统计方案时要同步隐私文案
+
+### Changed
+
+- 隐私与免责页第 4 条由「没有统计与广告」改为「访问统计（无 cookie）」，
+  写明统计方式、数据范围与退出方法
+
 ## [0.4.0] - 2026-11-05
 
 面向使用者的文档与联系方式完善。

@@ -55,6 +55,34 @@ git push origin v0.3.1
 
 任何一道闸门不过，工作流直接失败，**不会部署**，线上保持原版本。
 
+## 访问统计
+
+用 **Cloudflare Web Analytics**：不种 cookie、不做跨站追踪、只记录聚合数据，
+与站点「不收集个人信息」的定位一致。
+
+### 开启步骤
+
+1. 控制台 → **Workers & Pages → Web Analytics → Add a site**
+2. Hostname 填 `www.51bilitube.com`
+3. **选择 "Enable with JS snippet"，不要选 Automatic**——Worker 响应不一定被边缘注入，
+   手动插入能确定生效，也避免和自动注入重复计数
+4. 复制 snippet 里的 token（32 位十六进制）
+
+### 填到哪
+
+`web/lib/site.ts` 的 `analyticsToken` 字段，填完发版即可：
+
+```ts
+analyticsToken: "从控制台复制的 32 位 token",
+```
+
+留空时 `web/components/Analytics.tsx` 渲染 `null`，页面里不会有任何统计脚本。
+
+### 别忘了同步隐私文案
+
+`web/app/privacy/page.tsx` 的第 4 条写了统计方式与退出方法，
+改动统计方案时要一起更新，否则隐私页与实际行为不一致。
+
 ## 换域名
 
 只改 `web/lib/site.ts` 里的 `SITE.url` 一行，canonical、`robots.txt` 的 Host、
