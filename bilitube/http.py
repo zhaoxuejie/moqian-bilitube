@@ -2,7 +2,8 @@
 
 设计要点：
 - 默认直连（不走系统代理），避免账号异地风控
-- 默认不携带 Cookie，只有显式传入 SESSDATA 时才带
+- 会先取匿名设备指纹（buvid3/buvid4）随请求发送：B 站搜索接口要求带设备 cookie，
+  否则一律返回 HTTP 412；配置了 SESSDATA 时一并携带（账号 cookie 只用于字幕与更高配额）
 - -352/-412 视为可重试，-403/-404 视为不可重试
 - 连续请求中 -352 比例超过阈值时主动中断，保护账号与 IP
 """
@@ -62,6 +63,7 @@ class BiliClient:
         self._clock = clock
         self._last_call: float | None = None
         self._sessdata = sessdata
+        self._buvid: dict[str, str] = {}
         self._client = client or httpx.Client(
             timeout=timeout,
             headers=self._base_headers(),
@@ -75,9 +77,36 @@ class BiliClient:
 
     def headers(self) -> dict[str, str]:
         headers = self._base_headers()
+        cookies: list[str] = []
+        if self._buvid:
+            cookies.append(f"buvid3={self._buvid['buvid3']}")
+            cookies.append(f"buvid4={self._buvid['buvid4']}")
         if self._sessdata:
-            headers["Cookie"] = f"SESSDATA={self._sessdata}"
+            cookies.append(f"SESSDATA={self._sessdata}")
+        if cookies:
+            headers["Cookie"] = "; ".join(cookies)
         return headers
+
+    def warmup(self) -> bool:
+        """取匿名设备指纹（buvid3/buvid4），返回是否成功。
+
+        B 站搜索接口对没有设备 cookie 的请求直接返回 412，即使限速很低也一样。
+        失败不致命：调用方可继续，只是被风控的概率更高。
+        """
+        if self._buvid:
+            return True
+        try:
+            response = self._client.get(
+                f"{BASE_URL}/x/frontend/finger/spi", headers=self._base_headers()
+            )
+            data = (response.json() or {}).get("data") or {}
+            b3, b4 = data.get("b_3"), data.get("b_4")
+            if b3 and b4:
+                self._buvid = {"buvid3": str(b3), "buvid4": str(b4)}
+                return True
+        except Exception:  # 网络或解析失败都退化为匿名请求
+            return False
+        return False
 
     def _throttle(self) -> None:
         if self.rate_limit_rps <= 0:

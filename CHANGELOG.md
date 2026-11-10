@@ -15,6 +15,20 @@
 
 ### Removed
 
+## [0.5.2] - 2026-11-10
+
+### Fixed
+
+- **采集全线 412**：B 站搜索接口要求请求携带匿名设备指纹 cookie（`buvid3`/`buvid4`），
+  不带则第一个请求就被拦。客户端新增 `warmup()`，采集前调 `/x/frontend/finger/spi`
+  取一次指纹并随请求发送（ADR-022）；失败不致命
+- CLI 的四处客户端构造收敛为 `_make_client()` 工厂，统一做 warmup 与日志
+
+### Changed
+
+- `docs/api-contract.md`：原来写「除字幕外不携带任何 Cookie」，更正为
+  「不携带账号 Cookie，但携带匿名设备指纹」
+
 ## [0.5.1] - 2026-11-10
 
 ### Fixed

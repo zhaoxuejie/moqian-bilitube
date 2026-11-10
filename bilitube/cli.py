@@ -128,6 +128,25 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
+def _make_client(config: Config, logger):
+    """构造带设备指纹的客户端。
+
+    B 站搜索接口对没有 buvid 的请求直接 412，所以先 warmup 一次；
+    失败不阻断，只是风控概率更高。
+    """
+    client = BiliClient(
+        rate_limit_rps=config.rate_limit_rps,
+        timeout=config.request_timeout,
+        sessdata=config.bili_sessdata,
+    )
+
+    if client.warmup():
+        logger.info("已获取匿名设备指纹（buvid3/buvid4）")
+    else:
+        logger.warning("未能获取设备指纹，请求将不带 buvid，极易触发 412")
+    return client
+
+
 def _run_collect(args: argparse.Namespace, config: Config, logger) -> int:
     if args.max_pages < 1:
         logger.error("--max-pages 必须 >= 1")
@@ -159,11 +178,8 @@ def _run_collect(args: argparse.Namespace, config: Config, logger) -> int:
     logger.info("开始采集：关键词 %d 个，排序 %s，最多 %d 页", len(keywords), orders, args.max_pages)
 
     conn = open_connection(config.db_path)
-    client = BiliClient(
-        rate_limit_rps=config.rate_limit_rps,
-        timeout=config.request_timeout,
-        sessdata=config.bili_sessdata,
-    )
+    client = _make_client(config, logger)
+
     try:
         report = collect_search(
             client,
@@ -188,11 +204,8 @@ def _run_collect(args: argparse.Namespace, config: Config, logger) -> int:
 
 def _run_enrich(args: argparse.Namespace, config: Config, logger) -> int:
     conn = open_connection(config.db_path)
-    client = BiliClient(
-        rate_limit_rps=config.rate_limit_rps,
-        timeout=config.request_timeout,
-        sessdata=config.bili_sessdata,
-    )
+    client = _make_client(config, logger)
+
     try:
         report = collect_enrich(
             client,
@@ -214,11 +227,8 @@ def _run_enrich(args: argparse.Namespace, config: Config, logger) -> int:
 
 def _run_danmaku(args: argparse.Namespace, config: Config, logger) -> int:
     conn = open_connection(config.db_path)
-    client = BiliClient(
-        rate_limit_rps=config.rate_limit_rps,
-        timeout=config.request_timeout,
-        sessdata=config.bili_sessdata,
-    )
+    client = _make_client(config, logger)
+
     try:
         report = collect_danmaku(
             client,
@@ -280,11 +290,8 @@ def _run_update(args: argparse.Namespace, config: Config, logger) -> int:
     )
 
     conn = open_connection(config.db_path)
-    client = BiliClient(
-        rate_limit_rps=config.rate_limit_rps,
-        timeout=config.request_timeout,
-        sessdata=config.bili_sessdata,
-    )
+    client = _make_client(config, logger)
+
     try:
         search_report = collect_search(
             client,

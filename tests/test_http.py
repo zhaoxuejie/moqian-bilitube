@@ -146,3 +146,41 @@ def test_search_empty_result_is_valid() -> None:
     client = make_client(handler)
     assert client.search_videos("不存在的关键词") == []
     assert client.stats["risk_control"] == 0
+
+def test_warmup_sets_device_cookie() -> None:
+    """热身取到 buvid 后，后续请求必须带上设备 cookie（搜索接口没它一律 412）。"""
+    seen: dict[str, str] = {}
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        if request.url.path.endswith("/x/frontend/finger/spi"):
+            return httpx.Response(200, json={"code": 0, "data": {"b_3": "B3", "b_4": "B4"}})
+        seen["cookie"] = request.headers.get("cookie", "")
+        return httpx.Response(200, json={"code": 0, "data": {"ok": True}})
+
+    client = make_client(handler)
+    assert client.warmup() is True
+    client.video_detail("BV1xx")
+    assert "buvid3=B3" in seen["cookie"]
+    assert "buvid4=B4" in seen["cookie"]
+
+
+def test_warmup_failure_is_not_fatal() -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        return httpx.Response(500)
+
+    client = make_client(handler)
+    assert client.warmup() is False
+    assert "Cookie" not in client.headers()
+
+
+def test_sessdata_and_buvid_coexist() -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        if request.url.path.endswith("/x/frontend/finger/spi"):
+            return httpx.Response(200, json={"code": 0, "data": {"b_3": "B3", "b_4": "B4"}})
+        return httpx.Response(200, json={"code": 0, "data": {}})
+
+    client = make_client(handler, sessdata="sess-token")
+    client.warmup()
+    cookie = client.headers()["Cookie"]
+    assert "buvid3=B3" in cookie
+    assert "SESSDATA=sess-token" in cookie
