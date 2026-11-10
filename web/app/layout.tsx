@@ -7,6 +7,8 @@ import ThemeToggle from "@/components/ThemeToggle";
 import { loadMeta } from "@/lib/data";
 import { SITE, SITE_DESCRIPTION, SITE_ORIGIN, SITE_TITLE } from "@/lib/site";
 import { formatNumber } from "@/lib/types";
+
+const SITE_META = loadMeta();
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -29,7 +31,7 @@ export const metadata: Metadata = {
         url: "/og.png",
         width: 1200,
         height: 630,
-        alt: "BiliTube · 翻完 3,652 个 AI 视频，留下这 1,360 个",
+        alt: `BiliTube · 翻完 ${formatNumber(SITE_META.candidates)} 个 AI 视频，留下这 ${formatNumber(SITE_META.videos)} 个`,
       },
     ],
   },
@@ -56,7 +58,7 @@ const METHOD_ITEMS = [
   {
     index: "01",
     title: "先筛选，再推荐",
-    body: "从 3,652 条候选中，经过相关性与质量规则筛选。",
+    body: `从 ${formatNumber(SITE_META.candidates)} 条候选中，经过相关性与质量规则筛选。`,
   },
   {
     index: "02",
