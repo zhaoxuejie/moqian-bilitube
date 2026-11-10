@@ -1,138 +1,182 @@
 [
   {
     "name": "RAG",
-    "count": 209
+    "count": 267
   },
   {
     "name": "向量数据库",
-    "count": 108
+    "count": 136
   },
   {
     "name": "本地部署",
-    "count": 94
-  },
-  {
-    "name": "DeepSeek",
-    "count": 80
+    "count": 113
   },
   {
     "name": "Transformer",
-    "count": 69
+    "count": 95
   },
   {
-    "name": "Agent",
-    "count": 67
+    "name": "DeepSeek",
+    "count": 95
   },
   {
     "name": "知识图谱",
-    "count": 67
+    "count": 87
+  },
+  {
+    "name": "Agent",
+    "count": 85
   },
   {
     "name": "提示词工程",
-    "count": 66
+    "count": 80
   },
   {
     "name": "ComfyUI",
-    "count": 63
+    "count": 80
   },
   {
     "name": "SFT",
-    "count": 62
-  },
-  {
-    "name": "Stable Diffusion",
-    "count": 57
-  },
-  {
-    "name": "强化学习",
-    "count": 53
+    "count": 73
   },
   {
     "name": "LangChain",
-    "count": 49
+    "count": 64
   },
   {
     "name": "AI Agent",
-    "count": 46
+    "count": 63
+  },
+  {
+    "name": "强化学习",
+    "count": 63
   },
   {
     "name": "LoRA",
-    "count": 44
-  },
-  {
-    "name": "vLLM",
-    "count": 43
+    "count": 59
   },
   {
     "name": "工作流",
-    "count": 42
+    "count": 58
+  },
+  {
+    "name": "Stable Diffusion",
+    "count": 58
+  },
+  {
+    "name": "vLLM",
+    "count": 58
+  },
+  {
+    "name": "推理加速",
+    "count": 54
   },
   {
     "name": "MCP",
-    "count": 39
-  },
-  {
-    "name": "AI绘画",
-    "count": 39
-  },
-  {
-    "name": "Ollama",
-    "count": 38
-  },
-  {
-    "name": "深度学习",
-    "count": 36
+    "count": 48
   },
   {
     "name": "大模型",
-    "count": 36
+    "count": 44
+  },
+  {
+    "name": "Ollama",
+    "count": 43
+  },
+  {
+    "name": "AI绘画",
+    "count": 43
+  },
+  {
+    "name": "深度学习",
+    "count": 42
+  },
+  {
+    "name": "RLHF",
+    "count": 42
   },
   {
     "name": "大模型应用",
+    "count": 40
+  },
+  {
+    "name": "LoRA训练",
+    "count": 37
+  },
+  {
+    "name": "模型微调",
+    "count": 37
+  },
+  {
+    "name": "提示词",
+    "count": 36
+  },
+  {
+    "name": "图生视频",
     "count": 36
   },
   {
     "name": "文生视频",
+    "count": 36
+  },
+  {
+    "name": "多模态",
     "count": 35
-  },
-  {
-    "name": "推理加速",
-    "count": 35
-  },
-  {
-    "name": "LoRA训练",
-    "count": 34
-  },
-  {
-    "name": "RLHF",
-    "count": 30
-  },
-  {
-    "name": "提示词",
-    "count": 30
-  },
-  {
-    "name": "模型微调",
-    "count": 30
-  },
-  {
-    "name": "图生视频",
-    "count": 29
   },
   {
     "name": "开源模型",
-    "count": 29
-  },
-  {
-    "name": "大模型微调",
-    "count": 27
-  },
-  {
-    "name": "Milvus",
-    "count": 27
+    "count": 35
   },
   {
     "name": "知识库",
+    "count": 34
+  },
+  {
+    "name": "Milvus",
+    "count": 32
+  },
+  {
+    "name": "注意力机制",
+    "count": 30
+  },
+  {
+    "name": "大模型微调",
+    "count": 29
+  },
+  {
+    "name": "DPO",
+    "count": 28
+  },
+  {
+    "name": "KV Cache",
+    "count": 26
+  },
+  {
+    "name": "Claude Code",
+    "count": 26
+  },
+  {
+    "name": "AI视频生成",
+    "count": 26
+  },
+  {
+    "name": "智能体",
+    "count": 26
+  },
+  {
+    "name": "神经网络",
+    "count": 25
+  },
+  {
+    "name": "量化",
+    "count": 25
+  },
+  {
+    "name": "LLM",
+    "count": 25
+  },
+  {
+    "name": "模型部署",
     "count": 25
   },
   {
@@ -140,43 +184,51 @@
     "count": 25
   },
   {
-    "name": "神经网络",
-    "count": 23
+    "name": "机器学习",
+    "count": 24
   },
   {
-    "name": "AI视频生成",
+    "name": "论文精读",
     "count": 23
   },
   {
     "name": "AI编程",
-    "count": 22
+    "count": 23
   },
   {
-    "name": "DPO",
-    "count": 22
-  },
-  {
-    "name": "多模态",
-    "count": 22
-  },
-  {
-    "name": "机器学习",
-    "count": 22
+    "name": "LoRA微调",
+    "count": 23
   },
   {
     "name": "Python",
+    "count": 23
+  },
+  {
+    "name": "PyTorch",
     "count": 22
   },
   {
-    "name": "Claude Code",
+    "name": "向量检索",
+    "count": 22
+  },
+  {
+    "name": "大模型训练",
+    "count": 22
+  },
+  {
+    "name": "文生图",
     "count": 21
   },
   {
-    "name": "LLM",
+    "name": "Embedding",
     "count": 21
   },
   {
-    "name": "注意力机制",
+    "name": "预训练",
+    "count": 20
+  },
+  {
+    "name": "推理优化",
     "count": 20
   },
   {
@@ -184,7 +236,7 @@
     "count": 20
   },
   {
-    "name": "论文精读",
+    "name": "NLP",
     "count": 19
   },
   {
@@ -192,131 +244,79 @@
     "count": 19
   },
   {
+    "name": "PPO",
+    "count": 19
+  },
+  {
     "name": "吴恩达",
     "count": 19
   },
   {
-    "name": "PyTorch",
-    "count": 18
-  },
-  {
-    "name": "大模型训练",
-    "count": 18
-  },
-  {
-    "name": "量化",
-    "count": 17
-  },
-  {
-    "name": "Embedding",
-    "count": 17
-  },
-  {
-    "name": "智能体",
-    "count": 17
-  },
-  {
-    "name": "模型部署",
-    "count": 17
-  },
-  {
-    "name": "NLP",
-    "count": 16
-  },
-  {
-    "name": "向量检索",
-    "count": 16
-  },
-  {
-    "name": "KV Cache",
-    "count": 16
-  },
-  {
-    "name": "大模型入门",
-    "count": 16
-  },
-  {
     "name": "量化交易",
-    "count": 16
-  },
-  {
-    "name": "预训练",
-    "count": 15
-  },
-  {
-    "name": "检索增强",
-    "count": 15
-  },
-  {
-    "name": "项目实战",
-    "count": 15
-  },
-  {
-    "name": "DeepSeek-R1",
-    "count": 14
-  },
-  {
-    "name": "学习路线",
-    "count": 14
-  },
-  {
-    "name": "环境配置",
-    "count": 14
-  },
-  {
-    "name": "豆包",
-    "count": 14
+    "count": 18
   },
   {
     "name": "扩散模型",
-    "count": 13
+    "count": 17
   },
   {
-    "name": "文生图",
-    "count": 13
+    "name": "学习路线",
+    "count": 17
   },
   {
-    "name": "视频生成",
-    "count": 13
-  },
-  {
-    "name": "开源项目",
-    "count": 13
-  },
-  {
-    "name": "PPO",
-    "count": 13
-  },
-  {
-    "name": "推理优化",
-    "count": 12
-  },
-  {
-    "name": "Qwen3",
-    "count": 12
-  },
-  {
-    "name": "后训练",
-    "count": 12
-  },
-  {
-    "name": "知识表示",
-    "count": 12
-  },
-  {
-    "name": "开源大模型",
-    "count": 12
-  },
-  {
-    "name": "Neo4j",
-    "count": 12
-  },
-  {
-    "name": "提示工程",
-    "count": 12
+    "name": "Dify",
+    "count": 17
   },
   {
     "name": "整合包",
-    "count": 11
+    "count": 17
+  },
+  {
+    "name": "检索增强",
+    "count": 17
+  },
+  {
+    "name": "大模型入门",
+    "count": 17
+  },
+  {
+    "name": "DeepSeek-R1",
+    "count": 16
+  },
+  {
+    "name": "工具调用",
+    "count": 16
+  },
+  {
+    "name": "环境配置",
+    "count": 16
+  },
+  {
+    "name": "开源项目",
+    "count": 16
+  },
+  {
+    "name": "后训练",
+    "count": 16
+  },
+  {
+    "name": "项目实战",
+    "count": 16
+  },
+  {
+    "name": "视频生成",
+    "count": 15
+  },
+  {
+    "name": "开源大模型",
+    "count": 15
+  },
+  {
+    "name": "提示工程",
+    "count": 15
+  },
+  {
+    "name": "Coze",
+    "count": 14
   }
 ]
