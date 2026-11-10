@@ -27,7 +27,7 @@ class Config:
     llm_base_url: str = "https://api.deepseek.com"
     llm_model: str = "deepseek-chat"
     request_timeout: float = 20.0
-    rate_limit_rps: float = 1.5
+    rate_limit_rps: float = 0.8
 
     def __post_init__(self) -> None:
         # data_dir 可能来自命令行字符串，统一收敛为 Path
@@ -50,7 +50,7 @@ class Config:
             llm_base_url=os.getenv("LLM_BASE_URL") or "https://api.deepseek.com",
             llm_model=os.getenv("LLM_MODEL") or "deepseek-chat",
             request_timeout=float(os.getenv("REQUEST_TIMEOUT") or 20),
-            rate_limit_rps=float(os.getenv("RATE_LIMIT_RPS") or 1.5),
+            rate_limit_rps=float(os.getenv("RATE_LIMIT_RPS") or 0.8),
         )
 
         log = logger or logging.getLogger(__name__)

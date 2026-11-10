@@ -66,7 +66,7 @@ def test_config_defaults_without_env_file(tmp_path: Path, monkeypatch) -> None:
     assert config.data_dir == Path("data")
     assert config.bili_sessdata is None
     assert config.llm_api_key is None
-    assert config.rate_limit_rps == 1.5
+    assert config.rate_limit_rps == 0.8
 
 
 def test_config_reads_env_file(tmp_path: Path, monkeypatch) -> None:
